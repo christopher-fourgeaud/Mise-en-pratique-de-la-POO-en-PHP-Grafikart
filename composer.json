@@ -1,0 +1,22 @@
+{
+  "name": "christopher/mon-framework",
+  "authors": [
+    {
+      "name": "Christopher Fourgeaud",
+      "email": "christopher.fourgeaud@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Framework\\": "src/Framework"
+    }
+  },
+  "require": {
+    "guzzlehttp/psr7": "^1.6",
+    "http-interop/response-sender": "^1.0",
+    "squizlabs/php_codesniffer": "^3.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  }
+}
