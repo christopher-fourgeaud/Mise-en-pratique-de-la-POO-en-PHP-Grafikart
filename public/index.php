@@ -1,12 +1,15 @@
 <?php
 
 use Framework\App;
-use GuzzleHttp\Psr7\ServerRequest;
+use App\blog\BlogModule;
 use function Http\Response\send;
+use GuzzleHttp\Psr7\ServerRequest;
 
 require '../vendor/autoload.php';
 
-$app = new App();
+$app = new App([
+    BlogModule::class
+]);
 
 $response = $app->run(ServerRequest::fromGlobals());
 send($response);
