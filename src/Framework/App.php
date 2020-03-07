@@ -2,13 +2,16 @@
 
 namespace Framework;
 
+ini_set("xdebug.var_display_max_children", -1);
+ini_set("xdebug.var_display_max_data", -1);
+ini_set("xdebug.var_display_max_depth", -1);
+
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class App
 {
-
     /**
      * Liste des modules
      *
@@ -49,23 +52,30 @@ class App
         }
 
         $route = $this->router->match($request);
+        // Si $route est null on renvoie une 404
         if (is_null($route)) {
             return new Response(404, [], '<h1>Erreur 404</h1>');
         }
 
+        // Récupère les paramètres de la route
         $params = $route->getParams();
+
+        // Je modifie la requète que j'envoie à mon callback pour lui rajouter les attributs dont il à besoin
         $request = array_reduce(array_keys($params), function ($request, $key) use ($params) {
             return $request->withAttribute($key, $params[$key]);
         }, $request);
 
+        // On appelle le callback de la request
         $response = call_user_func_array($route->getCallback(), [$request]);
+
+
         if (is_string($response)) {
             return new Response(200, [], $response);
         } elseif ($response instanceof ResponseInterface) {
             return $response;
         } else {
             throw new \Exception(
-                'La réponse n\'est ni une chaîne de caractère ni une instance de la classe ResponseInterface'
+                'La réponse n\'est ni une chaîne de caractère ni une instance de la classe ResponseInterface.'
             );
         }
     }

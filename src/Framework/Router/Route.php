@@ -16,14 +16,14 @@ class Route
     private $name;
 
     /**
-     * Undocumented variable
+     * Fonction callback
      *
      * @var callable
      */
     private $callable;
 
     /**
-     * Undocumented variable
+     * Tableau de paramètre
      *
      * @var array
      */
