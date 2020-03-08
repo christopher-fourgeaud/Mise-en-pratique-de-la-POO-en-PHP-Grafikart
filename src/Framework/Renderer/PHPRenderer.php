@@ -1,8 +1,8 @@
 <?php
 
-namespace Framework;
+namespace Framework\Renderer;
 
-class Renderer
+class PHPRenderer implements RendererInterface
 {
     /**
      * Tableau de nos chemins
@@ -19,6 +19,13 @@ class Renderer
     private $globals = [];
 
     const DEFAULT_NAMESPACE = '__MAIN';
+
+    public function __construct(?string $defaultPath = null)
+    {
+        if (!is_null($defaultPath)) {
+            $this->addPath($defaultPath);
+        }
+    }
 
     /**
      * Permet de rajouter un chemin pour charger les vues
