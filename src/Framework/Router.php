@@ -28,11 +28,11 @@ class Router
      * Récupère la route
      *
      * @param string $url
-     * @param callable $callable
+     * @param string|callable $callable
      * @param string $route_name
      * @return void
      */
-    public function get(string $url, callable $callable, string $route_name)
+    public function get(string $url, $callable, string $route_name)
     {
         $this->router->addRoute(new ZendRoute($url, $callable, ['GET'], $route_name));
     }

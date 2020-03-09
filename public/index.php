@@ -1,22 +1,31 @@
 <?php
 
 use Framework\App;
-use Twig\Environment;
 use App\blog\BlogModule;
 use function Http\Response\send;
-use Twig\Loader\FilesystemLoader;
 use GuzzleHttp\Psr7\ServerRequest;
-use Framework\Renderer\TwigRenderer;
 
 require '../vendor/autoload.php';
 
-$renderer = new TwigRenderer(dirname(__DIR__) . '/views');
-
-$app = new App([
+$modules = [
     BlogModule::class
-], [
-    'renderer' => $renderer
-]);
+];
+
+// Conteneur de dépendance
+$builder = new DI\ContainerBuilder;
+$builder->addDefinitions(dirname(__DIR__) . '/config/config.php');
+
+foreach ($modules as $module) {
+    if ($module::DEFINITIONS) {
+        $builder->addDefinitions($module::DEFINITIONS);
+    }
+}
+$builder->addDefinitions(dirname(__DIR__) . '/config.php');
+
+
+$container = $builder->build();
+
+$app = new App($container, $modules);
 
 $response = $app->run(ServerRequest::fromGlobals());
 send($response);
