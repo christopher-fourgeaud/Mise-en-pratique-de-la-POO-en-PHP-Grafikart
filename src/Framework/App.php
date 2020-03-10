@@ -89,4 +89,14 @@ class App
             );
         }
     }
+
+    /**
+     * Retourne le container
+     *
+     * @return ContainerInterface
+     */
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
 }

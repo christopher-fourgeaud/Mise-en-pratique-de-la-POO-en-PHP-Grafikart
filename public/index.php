@@ -5,7 +5,7 @@ use App\blog\BlogModule;
 use function Http\Response\send;
 use GuzzleHttp\Psr7\ServerRequest;
 
-require '../vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $modules = [
     BlogModule::class
@@ -26,6 +26,8 @@ $builder->addDefinitions(dirname(__DIR__) . '/config.php');
 $container = $builder->build();
 
 $app = new App($container, $modules);
-
-$response = $app->run(ServerRequest::fromGlobals());
-send($response);
+if (php_sapi_name() !== "cli") {
+    throw new Exception();
+    $response = $app->run(ServerRequest::fromGlobals());
+    send($response);
+}
