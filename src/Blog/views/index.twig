@@ -5,12 +5,9 @@
 {% block body %}
 <h1>Bienvenue sur le blog</h1>
 <ul>
-    <li><a href="{{ path('blog.show', {slug :'aeaezae-7eaz' }) }}">Article 1</a></li>
-    <li>Article</li>
-    <li>Article</li>
-    <li>Article</li>
-    <li>Article</li>
-    <li>Article</li>
+    {% for post in posts %}
+        <li><a href="{{ path('blog.show', {slug : post.slug, id: post.id }) }}">{{ post.name }}</a></li>
+    {% endfor %}
 </ul>
 {% endblock %}
 

@@ -27,7 +27,6 @@ $container = $builder->build();
 
 $app = new App($container, $modules);
 if (php_sapi_name() !== "cli") {
-    throw new Exception();
     $response = $app->run(ServerRequest::fromGlobals());
     send($response);
 }
