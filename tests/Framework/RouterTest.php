@@ -105,4 +105,27 @@ class RouterTest extends TestCase
         // On teste que notre url généré est correcte
         $this->assertEquals('/blog/mon-article-18', $url);
     }
+
+    public function testGenerateUrlWithQueryParams()
+    {
+        // On crée une nouvelle url, sa fonction callable et le nom de sa route
+        $this->router->get('/blog', function () {
+            return 'dsqsqd';
+        }, 'posts');
+
+        // On crée une nouvelle url, sa fonction callable et le nom de sa route
+        $this->router->get('/blog/{slug:[a-z0-9\-]+}-{id:\d+}', function () {
+            return 'hello';
+        }, 'post.show');
+
+        // On génère une url à partir d'un nom de route, de paramètres d'url ainsi le paramètre de la page
+        $url = $this->router->generateUrl(
+            'post.show',
+            ['slug' => 'mon-article', 'id' => 18],
+            ['p' => 2]
+        );
+
+        // On teste que notre url généré est correcte
+        $this->assertEquals('/blog/mon-article-18?p=2', $url);
+    }
 }

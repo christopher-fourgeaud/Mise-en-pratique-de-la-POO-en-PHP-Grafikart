@@ -4,7 +4,8 @@
 
 {% block body %}
 
-<h1>{{ post.name }}</h1>
+    <h1>{{ post.name }}</h1>
+    <p class="text-muted">{{ post.created_at | ago}}</p>
 
 {{ post.content | nl2br }}
 

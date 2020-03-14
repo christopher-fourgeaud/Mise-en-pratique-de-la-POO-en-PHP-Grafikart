@@ -13,10 +13,10 @@ trait RouterAwareAction
 
     /**
      * Renvoie une réponse de redirection
-     * 
+     *
      * @param string $path
      * @param array $params
-     * 
+     *
      * @return ResponseInterface
      */
     public function redirect(string $path, array $params = []): ResponseInterface
