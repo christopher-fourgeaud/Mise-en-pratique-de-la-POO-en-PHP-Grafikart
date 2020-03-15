@@ -27,6 +27,11 @@ return [
             'user' => $app->getContainer()->get('database.username'),
             'pass' => $app->getContainer()->get('database.password'),
             'charset' => 'utf8'
+        ],
+        'test' => [
+            'adapter' => 'sqlite',
+            'memory' => true,
+            'name' => 'test'
         ]
     ]
 ];

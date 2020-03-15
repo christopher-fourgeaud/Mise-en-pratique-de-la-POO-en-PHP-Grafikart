@@ -20,6 +20,6 @@ class TwigRendererFactory
             }
         }
 
-        return new TwigRenderer($loader, $twig);
+        return new TwigRenderer($twig);
     }
 }

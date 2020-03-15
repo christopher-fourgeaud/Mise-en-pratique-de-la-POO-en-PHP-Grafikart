@@ -52,9 +52,9 @@ class PostTable
      * Récupère un article à partir de son id
      *
      * @param int $id
-     * @return Post
+     * @return Post|null
      */
-    public function find(int $id): Post
+    public function find(int $id): ?Post
     {
         // On prépare la requète
         $query = $this->pdo->prepare(
@@ -71,6 +71,6 @@ class PostTable
         $query->setFetchMode(PDO::FETCH_CLASS, Post::class);
 
         // On lance la requète
-        return $query->fetch();
+        return $query->fetch() ?: null;
     }
 }
