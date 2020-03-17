@@ -73,4 +73,69 @@ class PostTable
         // On lance la requète
         return $query->fetch() ?: null;
     }
+
+    /**
+     * Met à jour un enregistrement au niveau de la bdd
+     *
+     * @param integer $id
+     * @param array $params
+     * @return boolean
+     */
+    public function update(int $id, array $params): bool
+    {
+        $fieldQuery = $this->buildFieldQuery($params);
+
+        $params['id'] = $id;
+
+        $statement = $this->pdo->prepare(
+            "UPDATE posts
+            SET $fieldQuery
+            WHERE id = :id"
+        );
+        return $statement->execute($params);
+    }
+
+    /**
+     * Ajoute un enregistrement au niveau de la bdd
+     *
+     * @param array $params
+     * @return boolean
+     */
+    public function insert(array $params): bool
+    {
+        $fields = array_keys($params);
+        $values = array_map(function ($fields) {
+            return ':' . $fields;
+        }, $fields);
+
+
+        $statement = $this->pdo->prepare(
+            "INSERT INTO posts (" . join(',', $fields) . ")
+            VALUES (" . join(',', $values) . ")"
+        );
+        return $statement->execute($params);
+    }
+
+    /**
+     * Supprimer un enregistrement au niveau de la bdd
+     *
+     * @param integer $id
+     * @return boolean
+     */
+    public function delete(int $id): bool
+    {
+        $statement = $this->pdo->prepare(
+            'DELETE FROM posts
+            WHERE id = ?'
+        );
+
+        return $statement->execute([$id]);
+    }
+
+    private function buildFieldQuery(array $params)
+    {
+        return join(', ', array_map(function ($fields) {
+            return "$fields = :$fields";
+        }, array_keys($params)));
+    }
 }

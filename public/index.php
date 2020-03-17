@@ -1,5 +1,6 @@
 <?php
 
+use App\Admin\AdminModule;
 use Framework\App;
 use App\blog\BlogModule;
 use function Http\Response\send;
@@ -8,6 +9,7 @@ use GuzzleHttp\Psr7\ServerRequest;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $modules = [
+    AdminModule::class,
     BlogModule::class
 ];
 

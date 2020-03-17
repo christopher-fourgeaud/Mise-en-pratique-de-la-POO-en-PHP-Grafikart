@@ -54,7 +54,7 @@ class PaginatedQuery implements AdapterInterface
      *
      * @return integer The number of results.
      */
-    function getNbResults(): int
+    public function getNbResults(): int
     {
         return $this->pdo->query($this->countQuery)->fetchColumn();
     }
@@ -67,7 +67,7 @@ class PaginatedQuery implements AdapterInterface
      *
      * @return array|\Iterator|\IteratorAggregate The slice.
      */
-    function getSlice($offset, $length): array
+    public function getSlice($offset, $length): array
     {
         $statement = $this->pdo->prepare($this->query . ' LIMIT :offset, :length');
         $statement->bindParam('offset', $offset, PDO::PARAM_INT);
