@@ -4,6 +4,9 @@ use Framework\Router;
 use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\Router\RouterTwigExtension;
+use Framework\Session\PHPSession;
+use Framework\Session\SessionInterface;
+use Framework\Twig\FlashExtension;
 use Framework\Twig\PagerFantaExtension;
 use Framework\Twig\TextExtension;
 use Framework\Twig\TimeExtension;
@@ -23,9 +26,11 @@ return [
         get(RouterTwigExtension::class),
         get(PagerFantaExtension::class),
         get(TextExtension::class),
-        get(TimeExtension::class)
+        get(TimeExtension::class),
+        get(FlashExtension::class)
 
     ],
+    SessionInterface::class => autowire(PHPSession::class),
     Router::class => autowire(),
     RendererInterface::class => factory(TwigRendererFactory::class),
     PDO::class => function (ContainerInterface $container) {
