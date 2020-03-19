@@ -9,6 +9,7 @@ use Framework\Actions\RouterAwareAction;
 use Framework\Renderer\RendererInterface;
 use Framework\Session\FlashService;
 use Framework\Session\SessionInterface;
+use Framework\Validator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AdminBlogAction
@@ -100,13 +101,20 @@ class AdminBlogAction
 
             $params['updated_at'] = date('Y-m-d H:i:s');
 
-            $this->postTable->update($item->id, $params);
-            $this->flash->success('L\'article a bien été modifié');
-            return $this->redirect('blog.admin.index');
+            $validator =  $this->getValidator($request);
+            if ($validator->isValid()) {
+                $this->postTable->update($item->id, $params);
+                $this->flash->success('L\'article a bien été modifié');
+                return $this->redirect('blog.admin.index');
+            }
+            $errors = $validator->getErrors();
+            $params['id'] = $item->id;
+            $item = $params;
         }
 
         return $this->renderer->render('@blog/admin/edit', [
-            'item' => $item
+            'item' => $item,
+            'errors' => $errors
         ]);
     }
 
@@ -125,11 +133,20 @@ class AdminBlogAction
                 'created_at' => date('Y-m-d H:i:s')
 
             ]);
-            $this->postTable->insert($params);
-            $this->flash->success('L\'article a bien été crée');
-            return $this->redirect('blog.admin.index');
+            $validator =  $this->getValidator($request);
+            if ($validator->isValid()) {
+                $this->postTable->insert($params);
+                $this->flash->success('L\'article a bien été crée');
+                return $this->redirect('blog.admin.index');
+            }
+
+            $errors = $validator->getErrors();
+            $item = $params;
         }
-        return $this->renderer->render('@blog/admin/create');
+        return $this->renderer->render('@blog/admin/create', [
+            'errors' => $errors,
+            'item' => $item
+        ]);
     }
 
     public function delete(Request $request)
@@ -144,5 +161,15 @@ class AdminBlogAction
         return array_filter($request->getParsedBody(), function ($key) {
             return in_array($key, ['name', 'content', 'slug']);
         }, ARRAY_FILTER_USE_KEY);
+    }
+
+    private function getValidator(Request $request)
+    {
+        return (new Validator($request->getParsedBody()))
+            ->required('content', 'name', 'slug')
+            ->checkLength('content', 10)
+            ->checkLength('name', 2, 250)
+            ->checkLength('slug', 2, 50)
+            ->checkSlug('slug');
     }
 }
