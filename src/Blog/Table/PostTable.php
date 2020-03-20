@@ -75,23 +75,17 @@ class PostTable
     }
 
     /**
-     * Met à jour un enregistrement au niveau de la bdd
+     * Met à jour un enregistrement au niveau de la base de données
      *
-     * @param integer $id
+     * @param int $id
      * @param array $params
-     * @return boolean
+     * @return bool
      */
     public function update(int $id, array $params): bool
     {
         $fieldQuery = $this->buildFieldQuery($params);
-
-        $params['id'] = $id;
-
-        $statement = $this->pdo->prepare(
-            "UPDATE posts
-            SET $fieldQuery
-            WHERE id = :id"
-        );
+        $params["id"] = $id;
+        $statement = $this->pdo->prepare("UPDATE posts SET $fieldQuery WHERE id = :id");
         return $statement->execute($params);
     }
 
@@ -134,8 +128,8 @@ class PostTable
 
     private function buildFieldQuery(array $params)
     {
-        return join(', ', array_map(function ($fields) {
-            return "$fields = :$fields";
+        return join(', ', array_map(function ($field) {
+            return "$field = :$field";
         }, array_keys($params)));
     }
 }
