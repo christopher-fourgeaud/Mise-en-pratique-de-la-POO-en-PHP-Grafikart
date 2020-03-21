@@ -4,21 +4,16 @@ namespace Framework\Renderer;
 
 class PHPRenderer implements RendererInterface
 {
-    /**
-     * Tableau de nos chemins
-     *
-     * @var array
-     */
+
+    const DEFAULT_NAMESPACE = '__MAIN';
+
     private $paths = [];
 
     /**
-     * Variables globalement accessible pour toutes les vues
-     *
+     * Variables globalement accessibles pour toutes les vues
      * @var array
      */
     private $globals = [];
-
-    const DEFAULT_NAMESPACE = '__MAIN';
 
     public function __construct(?string $defaultPath = null)
     {
@@ -28,11 +23,9 @@ class PHPRenderer implements RendererInterface
     }
 
     /**
-     * Permet de rajouter un chemin pour charger les vues
-     *
+     * Permet de rajouter un chamin pour charger les vues
      * @param string $namespace
-     * @param string|null $path
-     * @return void
+     * @param null|string $path
      */
     public function addPath(string $namespace, ?string $path = null): void
     {
@@ -45,10 +38,9 @@ class PHPRenderer implements RendererInterface
 
     /**
      * Permet de rendre une vue
-     * Le chemin peut etre précisé avec des namespaces rajoutés via addPath()
-     * exemple 1 : $this->render('@blog/view');
-     * exemple 2 : $this->render('view');
-     *
+     * Le chemin peut être précisé avec des namespace rajoutés via addPath()
+     * $this->render('@blog/view');
+     * $this->render('view');
      * @param string $view
      * @param array $params
      * @return string
@@ -73,42 +65,22 @@ class PHPRenderer implements RendererInterface
      *
      * @param string $key
      * @param mixed $value
-     * @return void
      */
-    public function addglobal(string $key, $value): void
+    public function addGlobal(string $key, $value): void
     {
         $this->globals[$key] = $value;
     }
 
-    /**
-     * Retourne True si la vue possède un namespace
-     *
-     * @param string $view
-     * @return boolean
-     */
     private function hasNamespace(string $view): bool
     {
         return $view[0] === '@';
     }
 
-    /**
-     * Retourne le namespace de la route.
-     *
-     * @param string $view
-     * @return string
-     */
     private function getNamespace(string $view): string
     {
-        // Retourne le chemin jusqu'au premier slash (/) en sautant l'arobase (@)
         return substr($view, 1, strpos($view, '/') - 1);
     }
 
-    /**
-     * Remplace le nom de la vue par son Namespace
-     *
-     * @param string $view
-     * @return string
-     */
     private function replaceNamespace(string $view): string
     {
         $namespace = $this->getNamespace($view);

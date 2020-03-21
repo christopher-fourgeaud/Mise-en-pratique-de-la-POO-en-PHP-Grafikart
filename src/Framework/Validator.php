@@ -2,7 +2,9 @@
 
 namespace Framework;
 
+use PDO;
 use DateTime;
+use Framework\Database\Table;
 use Framework\Validator\ValidationError;
 
 class Validator
@@ -37,7 +39,6 @@ class Validator
     {
         foreach ($keys as $key) {
             $value = $this->getValue($key);
-
             if (is_null($value)) {
                 $this->addError($key, 'required');
             }
@@ -55,7 +56,6 @@ class Validator
     {
         foreach ($keys as $key) {
             $value = $this->getValue($key);
-
             if (is_null($value) || empty($value)) {
                 $this->addError($key, 'empty');
             }
@@ -67,7 +67,6 @@ class Validator
     {
         $value = $this->getValue($key);
         $length = mb_strlen($value);
-
         if (!is_null($minLength) &&
             !is_null($maxLength) &&
             ($length < $minLength || $length > $maxLength)
@@ -75,14 +74,12 @@ class Validator
             $this->addError($key, 'betweenLength', [$minLength, $maxLength]);
             return $this;
         }
-
         if (!is_null($minLength) &&
             $length < $minLength
         ) {
             $this->addError($key, 'minLength', [$minLength]);
             return $this;
         }
-
         if (!is_null($maxLength) &&
             $length > $maxLength
         ) {
@@ -101,7 +98,6 @@ class Validator
     {
         $value = $this->getValue($key);
         $pattern = '/^[a-z0-9]+(-[a-z0-9]+)*$/';
-
         if (!is_null($value) && !preg_match($pattern, $value)) {
             $this->addError($key, 'slug');
         }
@@ -113,14 +109,30 @@ class Validator
         $value = $this->getValue($key);
         $date = DateTime::createFromFormat($format, $value);
         $errors = DateTime::getLastErrors();
-
         if ($errors['error_count'] > 0 || $errors['warning_count'] > 0 || $date === false) {
             $this->addError($key, 'datetime', [$format]);
         }
-
         return $this;
     }
 
+    public function checkExists(string $key, string $table, PDO $pdo): self
+    {
+        $value = $this->getValue($key);
+        $statement = $pdo->prepare(
+            "SELECT id
+            FROM $table
+            WHERE id = ?"
+        );
+        $statement->execute([$value]);
+        if ($statement->fetchColumn() === false) {
+            $this->addError($key, 'exists', [$table]);
+        }
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
     public function isValid(): bool
     {
         return empty($this->errors);
@@ -128,7 +140,6 @@ class Validator
 
     /**
      * Récupère les erreurs
-     *
      * @return ValidationError[]
      */
     public function getErrors(): array
@@ -142,12 +153,12 @@ class Validator
      * @param string $key
      * @param string $rule
      * @param array $attributes
-     * @return void
      */
     private function addError(string $key, string $rule, array $attributes = []): void
     {
         $this->errors[$key] = new ValidationError($key, $rule, $attributes);
     }
+
 
     private function getValue(string $key)
     {

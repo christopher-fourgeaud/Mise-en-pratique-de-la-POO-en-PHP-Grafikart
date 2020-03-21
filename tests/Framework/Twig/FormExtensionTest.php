@@ -94,4 +94,28 @@ class FormExtensionTest extends TestCase
             $html
         );
     }
+
+    public function testSelect()
+    {
+        $html = $this->formExtension->field(
+            [],
+            'name',
+            2,
+            'Titre',
+            [
+                'options' => [
+                    1 => 'Demo',
+                    '2' => 'Demo2'
+                ]
+            ]
+        );
+
+        $this->assertSimilar('<div class="form-group">
+                <label for="name">Titre</label>
+                <select class="form-control" name="name" id="name">
+                    <option value="1">Demo</option>
+                    <option value="2" selected>Demo2</option>
+                </select>
+            </div>', $html);
+    }
 }

@@ -4,10 +4,9 @@ namespace Framework\Session;
 
 class PHPSession implements SessionInterface
 {
+
     /**
-     * Assure que la Session est démarée
-     *
-     * @return void
+     * Assure que la Session est démarrée
      */
     private function ensureStarted()
     {
@@ -18,7 +17,6 @@ class PHPSession implements SessionInterface
 
     /**
      * Récupère une information en Session
-     *
      * @param string $key
      * @param mixed $default
      * @return mixed
@@ -29,6 +27,7 @@ class PHPSession implements SessionInterface
         if (array_key_exists($key, $_SESSION)) {
             return $_SESSION[$key];
         }
+
         return $default;
     }
 
@@ -36,7 +35,7 @@ class PHPSession implements SessionInterface
      * Ajoute une information en Session
      *
      * @param string $key
-     * @param mixed $value
+     * @param $value
      * @return mixed
      */
     public function set(string $key, $value): void
@@ -46,10 +45,8 @@ class PHPSession implements SessionInterface
     }
 
     /**
-     * Supprime une clef en Session
-     *
+     * Supprime une clef en session
      * @param string $key
-     * @return void
      */
     public function delete(string $key): void
     {

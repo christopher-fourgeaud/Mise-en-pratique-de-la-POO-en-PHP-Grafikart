@@ -18,13 +18,14 @@ class PostTableTest extends DatabaseTestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->postTable = new PostTable($this->pdo);
+        $pdo = $this->getPDO();
+        $this->migrateDatabase($pdo);
+        $this->postTable = new PostTable($pdo);
     }
 
     public function testFind()
     {
-        $this->seedDatabase();
+        $this->seedDatabase($this->postTable->getPdo());
         $post = $this->postTable->find(1);
         $this->assertInstanceOf(Post::class, $post);
     }
@@ -37,7 +38,7 @@ class PostTableTest extends DatabaseTestCase
 
     public function testUpdate()
     {
-        $this->seedDatabase();
+        $this->seedDatabase($this->postTable->getPdo());
         $this->postTable->update(1, [
             'name' => 'Salut',
             'slug' => 'demo',
@@ -73,15 +74,15 @@ class PostTableTest extends DatabaseTestCase
             'slug' => 'demo'
         ]);
 
-        $count = $this->pdo->query(
+        $count = $this->postTable->getPdo()->query(
             'SELECT COUNT(id)
             FROM posts'
         )->fetchColumn();
 
         $this->assertEquals(2, (int) $count);
-        $this->postTable->delete($this->pdo->lastInsertId());
+        $this->postTable->delete($this->postTable->getPdo()->lastInsertId());
 
-        $count = $this->pdo->query(
+        $count = $this->postTable->getPdo()->query(
             'SELECT COUNT(id)
             FROM posts'
         )->fetchColumn();

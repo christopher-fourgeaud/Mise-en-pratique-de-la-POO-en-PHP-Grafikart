@@ -54,6 +54,8 @@ class FormExtension extends AbstractExtension
         }
         if ($type === 'textarea') {
             $input = $this->textArea($value, $attributes);
+        } elseif (array_key_exists('options', $options)) {
+            $input = $this->select($value, $options['options'], $attributes);
         } else {
             $input = $this->input($value, $attributes);
         }
@@ -73,6 +75,23 @@ class FormExtension extends AbstractExtension
     private function input(?string $value, array $attributes): string
     {
         return "<input type=\"text\" " . $this->getHtmlFromArray($attributes) . " value=\"{$value}\">";
+    }
+
+    /**
+     * Génère un select
+     *
+     * @param string|null $value
+     * @param array $options
+     * @param array $attributes
+     * @return void
+     */
+    private function select(?string $value, array $options, array $attributes): string
+    {
+        $htmlOptions = array_reduce(array_keys($options), function (string $html, string $key) use ($options, $value) {
+            $params = ['value' => $key, 'selected' => $key === $value];
+            return $html . '<option ' . $this->getHtmlFromArray($params) . '>' . $options[$key] . '</option>';
+        }, "");
+        return "<select " . $this->getHtmlFromArray($attributes) . ">$htmlOptions</select>";
     }
 
     /**
@@ -108,16 +127,15 @@ class FormExtension extends AbstractExtension
      */
     private function getHtmlFromArray(array $attributes)
     {
-        return implode(
-            ' ',
-            array_map(
-                function ($name, $value) {
-                    return "$name=\"$value\"";
-                },
-                array_keys($attributes),
-                $attributes
-            )
-        );
+        $htmlParts = [];
+        foreach ($attributes as $name => $value) {
+            if ($value === true) {
+                $htmlParts[] = (string) $name;
+            } elseif ($value !== false) {
+                $htmlParts[] = "$name=\"$value\"";
+            }
+        }
+        return implode(' ', $htmlParts);
     }
 
     private function convertValue($value): string
