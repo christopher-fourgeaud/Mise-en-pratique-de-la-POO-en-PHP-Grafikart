@@ -115,6 +115,14 @@ class Validator
         return $this;
     }
 
+    /**
+     * Vérifie que la clef existe dans la base de donnée
+     *
+     * @param string $key
+     * @param string $table
+     * @param PDO $pdo
+     * @return self
+     */
     public function checkExists(string $key, string $table, PDO $pdo): self
     {
         $value = $this->getValue($key);
@@ -126,6 +134,36 @@ class Validator
         $statement->execute([$value]);
         if ($statement->fetchColumn() === false) {
             $this->addError($key, 'exists', [$table]);
+        }
+        return $this;
+    }
+
+    /**
+     * Vérifie que la clef est unique dans la base de donnée
+     *
+     * @param string $key
+     * @param string $table
+     * @param PDO $pdo
+     * @return self
+     */
+    public function checkUnique(string $key, string $table, PDO $pdo, ?int $exclude = null): self
+    {
+        $value = $this->getValue($key);
+        $query =
+            "SELECT id
+                FROM $table
+                WHERE $key = ?";
+        $params = [$value];
+
+        if ($exclude !== null) {
+            $query .= "AND id != ?";
+            $params[] = $exclude;
+        }
+
+        $statement = $pdo->prepare($query);
+        $statement->execute($params);
+        if ($statement->fetchColumn() !== false) {
+            $this->addError($key, 'unique', [$value]);
         }
         return $this;
     }

@@ -29,8 +29,11 @@ class TextExtension extends AbstractExtension
      * @param integer $maxLength
      * @return string
      */
-    public function excerpt(string $content, int $maxLength = 100): string
+    public function excerpt(?string $content, int $maxLength = 100): string
     {
+        if (is_null($content)) {
+            return '';
+        }
         if (mb_strlen($content) > $maxLength) {
             // Stocke les X premiers caractères de mon contenu
             $excerpt = mb_substr($content, 0, $maxLength);

@@ -13,7 +13,7 @@ class Table
      *
      * @var PDO
      */
-    private $pdo;
+    protected $pdo;
 
 
     /**
@@ -40,6 +40,7 @@ class Table
      * Pagine les éléments
      *
      * @param int $perPage
+     * @param int $currentPage
      *
      * @return PagerFanta
      */
@@ -64,7 +65,10 @@ class Table
     public function findList(): array
     {
         $results = $this->pdo
-            ->query("SELECT id, name FROM {$this->table}")
+            ->query(
+                "SELECT id, name 
+                FROM {$this->table}"
+            )
             ->fetchAll(PDO::FETCH_NUM);
         $list = [];
         foreach ($results as $result) {
@@ -74,32 +78,50 @@ class Table
     }
 
     /**
-     * Récupère un élément à partir de son id
+     * Récupère tout les enregistrements
+     *
+     * @return array
+     */
+    public function findAll(): array
+    {
+        $query = $this->pdo
+            ->query(
+                "SELECT * FROM
+                {$this->table}"
+            );
+        if ($this->entity) {
+            $query->setFetchMode(PDO::FETCH_CLASS, $this->entity);
+        } else {
+            $query->setFetchMode(PDO::FETCH_OBJ);
+        }
+        return $query->fetchAll();
+    }
+
+    /**
+     * Récupère une ligne par rapport à un champs
+     *
+     * @param string $field
+     * @param string $value
+     * @return array
+     * @throws NoRecordException
+     */
+    public function findBy(string $field, string $value)
+    {
+        return $this->fetchOrFail("SELECT * FROM {$this->table} WHERE $field = ?", [$value]);
+    }
+
+    /**
+     * Récupère un élément à partir de son ID
      *
      * @param int $id
      * @return mixed
+     * @throws NoRecordException
      */
     public function find(int $id)
     {
-        // On prépare la requète
-        $query = $this->pdo->prepare(
-            "SELECT *
-             FROM {$this->table}
-             WHERE id = ?"
-        );
-
-        // On set les attributs
-        $query->execute([
-            $id
-        ]);
-
-        if ($this->entity) {
-            $query->setFetchMode(PDO::FETCH_CLASS, $this->entity);
-        }
-
-        // On lance la requète
-        return $query->fetch() ?: null;
+        return $this->fetchOrFail("SELECT * FROM {$this->table} WHERE id = ?", [$id]);
     }
+
 
     /**
      * Met à jour un enregistrement au niveau de la base de données
@@ -112,8 +134,8 @@ class Table
     {
         $fieldQuery = $this->buildFieldQuery($params);
         $params["id"] = $id;
-        $statement = $this->pdo->prepare("UPDATE {$this->table} SET $fieldQuery WHERE id = :id");
-        return $statement->execute($params);
+        $query = $this->pdo->prepare("UPDATE {$this->table} SET $fieldQuery WHERE id = :id");
+        return $query->execute($params);
     }
 
     /**
@@ -132,11 +154,11 @@ class Table
 
         $fields = join(', ', $fields);
 
-        $statement = $this->pdo->prepare(
+        $query = $this->pdo->prepare(
             "INSERT INTO {$this->table} ($fields)
             VALUES ($values)"
         );
-        return $statement->execute($params);
+        return $query->execute($params);
     }
 
     /**
@@ -147,12 +169,12 @@ class Table
      */
     public function delete(int $id): bool
     {
-        $statement = $this->pdo->prepare(
+        $query = $this->pdo->prepare(
             "DELETE FROM {$this->table}
             WHERE id = ?"
         );
 
-        return $statement->execute([$id]);
+        return $query->execute([$id]);
     }
 
     private function buildFieldQuery(array $params)
@@ -189,6 +211,36 @@ class Table
     }
 
     /**
+     * Permet d'éxécuter une requète et de récupérer le premier résultat
+     *
+     * @param string $query
+     * @param array $params
+     * @return void
+     */
+    protected function fetchOrFail(string $query, array $params = [])
+    {
+        $query = $this->pdo->prepare($query);
+
+        // On set les attributs
+        $query->execute($params);
+
+        if ($this->entity) {
+            $query->setFetchMode(PDO::FETCH_CLASS, $this->entity);
+        }
+
+        // On stocke le résultat de la requète
+        $record = $query->fetch();
+
+        // On vérifie si le resultat est false
+        if ($record === false) {
+            throw new NoRecordException();
+        }
+
+        // On retourne le résultat
+        return $record;
+    }
+
+    /**
      * Get instance de PDO
      *
      * @return  PDO
@@ -206,12 +258,12 @@ class Table
      */
     public function checkExists($id): bool
     {
-        $statement = $this->pdo->prepare(
+        $query = $this->pdo->prepare(
             "SELECT id
             FROM {$this->table}
             WHERE id = ?"
         );
-        $statement->execute([$id]);
-        return $statement->fetchColumn() !== false;
+        $query->execute([$id]);
+        return $query->fetchColumn() !== false;
     }
 }

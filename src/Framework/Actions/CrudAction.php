@@ -32,7 +32,7 @@ class CrudAction
      *
      * @var Table
      */
-    private $table;
+    protected $table;
 
     /**
      * Instance de FlashService

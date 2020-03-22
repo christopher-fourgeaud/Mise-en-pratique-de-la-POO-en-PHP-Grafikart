@@ -44,6 +44,7 @@ class CategoryCrudAction extends CrudAction
             ->required('name', 'slug')
             ->checkLength('name', 2, 250)
             ->checkLength('slug', 2, 50)
+            ->checkUnique('slug', $this->table->getTable(), $this->table->getPdo(), $request->getAttribute('id'))
             ->checkSlug('slug');
     }
 }

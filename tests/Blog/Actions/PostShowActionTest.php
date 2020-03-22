@@ -2,20 +2,20 @@
 
 namespace Tests\App\Blog\Actions;
 
-use App\Blog\Actions\BlogAction;
-use App\Blog\Table\PostTable;
-use Framework\Renderer\RendererInterface;
 use Framework\Router;
-use GuzzleHttp\Psr7\ServerRequest;
-use PHPUnit\Framework\TestCase;
 use App\Blog\Entity\Post;
+use App\Blog\Table\PostTable;
+use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Psr7\ServerRequest;
+use App\Blog\Actions\PostShowAction;
+use Framework\Renderer\RendererInterface;
 
 
-// class BlogActionTest extends TestCase
+// class PostShowActionTest extends TestCase
 
 // {
 //     /**
-//      * @var BlogAction
+//      * @var PostShowAction
 //      */
 //     private $action;
 
@@ -30,7 +30,7 @@ use App\Blog\Entity\Post;
 //         $this->renderer = $this->prophesize(RendererInterface::class);
 //         $this->postTable = $this->prophesize(PostTable::class);
 //         $this->router = $this->prophesize(Router::class);
-//         $this->action = new BlogAction(
+//         $this->action = new PostShowAction(
 //             $this->renderer->reveal(),
 //             $this->router->reveal(),
 //             $this->postTable->reveal()
@@ -57,7 +57,7 @@ use App\Blog\Entity\Post;
 //             'blog.show',
 //             ['id' => $post->id, 'slug' => $post->slug]
 //         )->willReturn('/demo2');
-//         $this->postTable->find($post->id)->willReturn($post);
+//         $this->postTable->findWithCategory($post->id)->willReturn($post);
 
 //         $response = call_user_func_array($this->action, [$request]);
 //         $this->assertEquals(301, $response->getStatusCode());
@@ -70,7 +70,7 @@ use App\Blog\Entity\Post;
 //         $request = (new ServerRequest('GET', '/'))
 //             ->withAttribute('id', $post->id)
 //             ->withAttribute('slug', $post->slug);
-//         $this->postTable->find($post->id)->willReturn($post);
+//         $this->postTable->findWithCategory($post->id)->willReturn($post);
 //         $this->renderer->render('@blog/show', ['post' => $post])->willReturn('');
 
 //         $response = call_user_func_array($this->action, [$request]);
