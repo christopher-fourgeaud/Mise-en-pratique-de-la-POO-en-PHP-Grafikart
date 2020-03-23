@@ -102,7 +102,7 @@ class FormExtension extends AbstractExtension
      */
     private function textArea(?string $value, array $attributes): string
     {
-        return "<textarea type=\"text\" " . $this->getHtmlFromArray($attributes) . ">{$value}</textarea>";
+        return "<textarea rows='10' type=\"text\" " . $this->getHtmlFromArray($attributes) . ">{$value}</textarea>";
     }
 
     /**
