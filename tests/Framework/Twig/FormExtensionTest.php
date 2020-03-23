@@ -75,7 +75,7 @@ class FormExtensionTest extends TestCase
         $this->assertSimilar(
             "<div class=\"form-group\">
                 <label for=\"name\">Titre</label>
-                <textarea type=\"text\" class=\"form-control\" name=\"name\" id=\"name\">demo</textarea>
+                <textarea rows='10' type=\"text\" class=\"form-control\" name=\"name\" id=\"name\">demo</textarea>
             </div>",
             $html
         );
