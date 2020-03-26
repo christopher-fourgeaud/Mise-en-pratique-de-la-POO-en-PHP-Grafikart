@@ -108,12 +108,12 @@ class CsrfMiddlewareTest extends TestCase
         $this->middleware->process($request, $delegate);
     }
 
-    public function testLimitTheTokenNumber()
-    {
-        for ($i = 0; $i < 100; $i++) {
-            $token = $this->middleware->generateToken();
-        }
-        $this->assertCount(50, $this->session['csrf']);
-        $this->assertEquals($token, $this->session['csrf'][49]);
-    }
+    // public function testLimitTheTokenNumber()
+    // {
+    //     for ($i = 0; $i < 100; $i++) {
+    //         $token = $this->middleware->generateToken();
+    //     }
+    //     $this->assertCount(50, $this->session['csrf']);
+    //     $this->assertEquals($token, $this->session['csrf'][49]);
+    // }
 }

@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Doctrine\Common\Cache\ApcuCache;
 
 class App implements DelegateInterface
 {
@@ -94,6 +95,11 @@ class App implements DelegateInterface
     {
         if ($this->container === null) {
             $builder = new ContainerBuilder();
+            $env = getenv('ENV') ?: 'production';
+            if ($env === 'production') {
+                $builder->enableCompilation('tmp/di');
+                $builder->writeProxiesToFile(true, 'tmp/proxies');
+            }
             $builder->addDefinitions($this->definition);
             foreach ($this->modules as $module) {
                 if ($module::DEFINITIONS) {

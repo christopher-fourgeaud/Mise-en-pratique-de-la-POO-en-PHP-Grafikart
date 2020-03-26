@@ -14,14 +14,16 @@ use Framework\Middleware\NotFoundMiddleware;
 use Framework\Middleware\DispatcherMiddleware;
 use Framework\Middleware\TrailingSlashMiddleware;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+chdir(dirname(__DIR__));
+
+require 'vendor/autoload.php';
 
 $modules = [
     AdminModule::class,
     BlogModule::class
 ];
 
-$app = (new App(dirname(__DIR__) . '/config/config.php'))
+$app = (new App('config/config.php'))
     ->addModule(AdminModule::class)
     ->addModule(BlogModule::class)
     ->pipe(Whoops::class)

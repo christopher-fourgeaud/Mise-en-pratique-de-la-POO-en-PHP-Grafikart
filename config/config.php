@@ -1,23 +1,26 @@
 <?php
 
-use Framework\Middleware\CsrfMiddleware;
 use Framework\Router;
-use Framework\Renderer\RendererInterface;
-use Framework\Renderer\TwigRendererFactory;
-use Framework\Router\RouterTwigExtension;
 use Framework\Session\PHPSession;
-use Framework\Session\SessionInterface;
 use Framework\Twig\CsrfExtension;
-use Framework\Twig\FlashExtension;
 use Framework\Twig\FormExtension;
-use Framework\Twig\PagerFantaExtension;
 use Framework\Twig\TextExtension;
 use Framework\Twig\TimeExtension;
+use Framework\Twig\FlashExtension;
+use Framework\Router\RouterFactory;
 use Psr\Container\ContainerInterface;
+use Framework\Session\SessionInterface;
+use Framework\Twig\PagerFantaExtension;
+use Framework\Middleware\CsrfMiddleware;
+use Framework\Renderer\RendererInterface;
+use Framework\Router\RouterTwigExtension;
 
-use function DI\{autowire, factory, get};
+use Framework\Renderer\TwigRendererFactory;
+use function DI\{autowire, factory, get, env};
 
 return [
+    'env' => env('ENV', 'production'),
+
     // Database
     'database.host' => 'localhost',
     'database.username' => 'root',
@@ -37,7 +40,7 @@ return [
     ],
     SessionInterface::class => autowire(PHPSession::class),
     CsrfMiddleware::class => autowire()->constructor(get(SessionInterface::class)),
-    Router::class => autowire(),
+    Router::class => factory(RouterFactory::class),
     RendererInterface::class => factory(TwigRendererFactory::class),
     PDO::class => function (ContainerInterface $container) {
         return new PDO(

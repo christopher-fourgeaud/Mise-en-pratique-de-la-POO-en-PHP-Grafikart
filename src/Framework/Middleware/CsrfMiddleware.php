@@ -12,8 +12,6 @@ use TypeError;
 
 class CsrfMiddleware implements MiddlewareInterface
 {
-
-
     /**
      * @var string
      */
@@ -34,10 +32,10 @@ class CsrfMiddleware implements MiddlewareInterface
      */
     private $session;
 
-    public function __construct(&$session, int $limit = 50, string $formKey = '_csrf', string $sessionKey = 'csrf')
+    public function __construct($session, int $limit = 50, string $formKey = '_csrf', string $sessionKey = 'csrf')
     {
         $this->validSession($session);
-        $this->session = &$session;
+        $this->session = $session;
         $this->formKey = $formKey;
         $this->sessionKey = $sessionKey;
         $this->limit = $limit;
