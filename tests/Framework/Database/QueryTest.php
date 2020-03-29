@@ -4,6 +4,7 @@ namespace Tests\Framework\Database;
 
 use Tests\DatabaseTestCase;
 use Framework\Database\Query;
+use Tests\Framework\Database\Demo;
 
 class QueryTest extends DatabaseTestCase
 {
@@ -61,5 +62,35 @@ class QueryTest extends DatabaseTestCase
             ])
             ->count();
         $this->assertEquals(29, $posts);
+    }
+
+    public function testHydrateEntity()
+    {
+        $pdo = $this->getPDO();
+        $this->migrateDatabase($pdo);
+        $this->seedDatabase($pdo);
+
+        $posts = (new Query($pdo))
+            ->from('posts', 'p')
+            ->into(Demo::class)
+            ->all();
+
+        $this->assertEquals('demo', substr($posts[0]->getSlug(), -4));
+    }
+
+    public function testLazyHydrate()
+    {
+        $pdo = $this->getPDO();
+        $this->migrateDatabase($pdo);
+        $this->seedDatabase($pdo);
+
+        $posts = (new Query($pdo))
+            ->from('posts', 'p')
+            ->into(Demo::class)
+            ->all();
+        $post = $posts[0];
+        $post2 = $posts[0];
+
+        $this->assertSame($post, $post2);
     }
 }

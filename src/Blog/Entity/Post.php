@@ -14,21 +14,37 @@ class Post
 
     public $content;
 
-    public $created_at;
+    public $createdAt;
 
-    public $updated_at;
+    public $updatedAt;
 
-    public $category_name;
+    public $categoryName;
 
-
-    public function __construct()
+    /**
+     * Set the value of createdAt
+     *
+     * @return  self
+     */
+    public function setCreatedAt($createdAt): self
     {
-        if ($this->created_at) {
-            $this->created_at = new DateTime($this->created_at);
+        if (is_string($createdAt)) {
+            $this->createdAt = new DateTime($this->$createdAt);
         }
 
-        if ($this->updated_at) {
-            $this->updated_at = new DateTime($this->updated_at);
+        return $this;
+    }
+
+    /**
+     * Set the value of updatedAt
+     *
+     * @return  self
+     */
+    public function setUpdatedAt($updatedAt): self
+    {
+        if (is_string($updatedAt)) {
+            $this->updatedAt = new DateTime($this->$updatedAt);
         }
+
+        return $this;
     }
 }

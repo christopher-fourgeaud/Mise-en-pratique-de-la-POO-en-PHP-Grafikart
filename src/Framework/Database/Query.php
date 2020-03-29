@@ -3,6 +3,10 @@
 namespace Framework\Database;
 
 use PDO;
+use Iterator;
+use Exception;
+use ArrayAccess;
+use Framework\Database\Hydrator;
 
 class Query
 {
@@ -12,15 +16,12 @@ class Query
 
     private $where = [];
 
-    private $group;
-
-    private $order;
-
-    private $limit;
+    private $entity;
 
     private $pdo;
 
     private $params;
+
 
     public function __construct(?PDO $pdo = null)
     {
@@ -65,6 +66,26 @@ class Query
         return $this;
     }
 
+    /**
+     * Spécifie l'entité à utiliser
+     * @param string $entity
+     * @return Query
+     */
+    public function into(string $entity): self
+    {
+        $this->entity = $entity;
+        return $this;
+    }
+
+    public function all(): QueryResult
+    {
+        return new QueryResult($this->execute()->fetchAll(PDO::FETCH_ASSOC), $this->entity);
+    }
+
+    /**
+     * Génère la requête SQL
+     * @return string
+     */
     public function __toString()
     {
         $parts = ['SELECT'];
@@ -76,8 +97,8 @@ class Query
         $parts[] = 'FROM';
         $parts[] = $this->buildFrom();
         if (!empty($this->where)) {
-            $parts[] = 'WHERE';
-            $parts[] = "(" . join(') AND (', $this->where) . ")";
+            $parts[] = "WHERE";
+            $parts[] = "(" . join(') AND (', $this->where) . ')';
         }
         return join(' ', $parts);
     }
@@ -95,13 +116,17 @@ class Query
         return join(' ,', $from);
     }
 
+    /**
+     * Exécute la requête
+     * @return \PDOStatement
+     */
     private function execute()
     {
         $query = $this->__toString();
         if ($this->params) {
-            $query = $this->pdo->prepare($query);
-            $query->execute($this->params);
-            return $query;
+            $statement = $this->pdo->prepare($query);
+            $statement->execute($this->params);
+            return $statement;
         }
         return $this->pdo->query($query);
     }
