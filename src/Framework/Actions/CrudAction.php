@@ -125,14 +125,14 @@ class CrudAction
         $item = $this->table->find($request->getAttribute('id'));
 
         if ($request->getMethod() === 'POST') {
-            $params = $this->getParams($request);
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
-                $this->table->update($item->id, $params);
+                $this->table->update($item->id, $this->getParams($request, $item));
                 $this->flash->success($this->messages['edit']);
                 return $this->redirect($this->routePrefix . '.index');
             }
             $this->errors = $validator->getErrors();
+            $params = $request->getParsedBody();
             $params['id'] = $item->id;
             $item = $params;
         }
@@ -154,19 +154,16 @@ class CrudAction
     public function create(Request $request)
     {
         $item = $this->getNewEntity();
-        $errors = [];
         if ($request->getMethod() === 'POST') {
-            $params = $this->getParams($request);
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
-                $this->table->insert($params);
+                $this->table->insert($this->getParams($request, $item));
                 $this->flash->success($this->messages['create']);
                 return $this->redirect($this->routePrefix . '.index');
             }
-            $item = $params;
+            $item = $request->getParsedBody();
             $this->errors = $validator->getErrors();
         }
-        $params = $this->formParams(compact('item', 'errors'));
 
         return $this->renderer->render(
             $this->viewPath . '/create',
@@ -196,7 +193,7 @@ class CrudAction
      * @param Request $request
      * @return array
      */
-    protected function getParams(Request $request): array
+    protected function getParams(Request $request, $item): array
     {
 
         return array_filter($request->getParsedBody(), function ($key) {
@@ -213,7 +210,7 @@ class CrudAction
      */
     protected function getValidator(Request $request)
     {
-        return (new Validator($request->getParsedBody()));
+        return (new Validator(array_merge($request->getParsedBody(), $request->getUploadedFiles())));
     }
 
     /**

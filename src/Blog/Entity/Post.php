@@ -20,6 +20,8 @@ class Post
 
     public $categoryName;
 
+    public $image;
+
     /**
      * Set the value of createdAt
      *
@@ -46,5 +48,10 @@ class Post
         }
 
         return $this;
+    }
+
+    public function getThumb()
+    {
+        return '/uploads/posts/' . $this->image;
     }
 }
