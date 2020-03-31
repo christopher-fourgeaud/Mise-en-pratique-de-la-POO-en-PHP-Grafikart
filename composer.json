@@ -21,7 +21,8 @@
     "php-di/php-di": "^6.0",
     "pagerfanta/pagerfanta": "^2.1",
     "middlewares/whoops": "^0.4.1",
-    "doctrine/cache": "~1.4"
+    "doctrine/cache": "~1.4",
+    "intervention/image": "^2.5"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.0",

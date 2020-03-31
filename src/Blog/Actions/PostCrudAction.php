@@ -57,6 +57,13 @@ class PostCrudAction extends CrudAction
         $this->postUpload = $postUpload;
     }
 
+    public function delete(ServerRequestInterface $request)
+    {
+        $post = $this->table->find($request->getAttribute('id'));
+        $this->postUpload->delete($post->image);
+        return parent::delete($request);
+    }
+
     protected function formParams(array $params): array
     {
         $params['categories'] = $this->categoryTable->findList();
