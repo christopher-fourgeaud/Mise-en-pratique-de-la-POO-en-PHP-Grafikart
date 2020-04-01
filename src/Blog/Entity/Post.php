@@ -18,22 +18,19 @@ class Post
 
     public $updatedAt;
 
-    public $categoryName;
-
     public $image;
+
 
     /**
      * Set the value of createdAt
      *
      * @return  self
      */
-    public function setCreatedAt($createdAt): self
+    public function setCreatedAt($createdAt)
     {
         if (is_string($createdAt)) {
-            $this->createdAt = new DateTime($this->$createdAt);
+            $this->createdAt = new \DateTime($createdAt);
         }
-
-        return $this;
     }
 
     /**
@@ -41,18 +38,21 @@ class Post
      *
      * @return  self
      */
-    public function setUpdatedAt($updatedAt): self
+    public function setUpdatedAt($updatedAt)
     {
         if (is_string($updatedAt)) {
-            $this->updatedAt = new DateTime($this->$updatedAt);
+            $this->updatedAt = new \DateTime($updatedAt);
         }
-
-        return $this;
     }
 
     public function getThumb()
     {
         ['filename' => $filename, 'extension' => $extension] = pathinfo($this->image);
         return '/uploads/posts/' . $filename . '_thumb.' . $extension;
+    }
+
+    public function getImageUrl()
+    {
+        return '/uploads/posts/' . $this->image;
     }
 }

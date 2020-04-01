@@ -73,19 +73,11 @@ class TableTest extends TestCase
 
     public function testFindAll()
     {
-        $this->table->getPdo()->exec(
-            "INSERT INTO test (name)
-            VALUES ('a1')"
-        );
-
-        $this->table->getPdo()->exec(
-            "INSERT INTO test (name)
-            VALUES ('a2')"
-        );
-        $categories = $this->table->findAll();
-
+        $this->table->getPdo()->exec('INSERT INTO test (name) VALUES ("a1")');
+        $this->table->getPdo()->exec('INSERT INTO test (name) VALUES ("a2")');
+        $categories = $this->table->findAll()->fetchAll();
         $this->assertCount(2, $categories);
-        $this->assertInstanceOf(stdClass::class, $categories[0]);
+        $this->assertInstanceOf(\stdClass::class, $categories[0]);
         $this->assertEquals('a1', $categories[0]->name);
         $this->assertEquals('a2', $categories[1]->name);
     }

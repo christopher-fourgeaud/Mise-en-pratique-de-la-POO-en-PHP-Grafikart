@@ -40,13 +40,8 @@ class PostTableTest extends DatabaseTestCase
     public function testUpdate()
     {
         $this->seedDatabase($this->postTable->getPdo());
-        $this->postTable->update(1, [
-            'name' => 'Salut',
-            'slug' => 'demo',
-        ]);
-
+        $this->postTable->update(1, ['name' => 'Salut', 'slug' => 'demo']);
         $post = $this->postTable->find(1);
-
         $this->assertEquals('Salut', $post->name);
         $this->assertEquals('demo', $post->slug);
     }
