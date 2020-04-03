@@ -10,7 +10,6 @@ use GuzzleHttp\Psr7\ServerRequest;
 use App\Blog\Actions\PostShowAction;
 use Framework\Renderer\RendererInterface;
 
-
 // class PostShowActionTest extends TestCase
 
 // {

@@ -20,7 +20,7 @@ class App implements DelegateInterface
      */
     private $modules = [];
     /**
-     * @var string
+     * @var string|array|null
      */
     private $definition;
 
@@ -32,14 +32,14 @@ class App implements DelegateInterface
     /**
      * @var string[]
      */
-    private $middlewares;
+    private $middlewares = [];
 
     /**
      * @var int
      */
     private $index = 0;
 
-    public function __construct(string $definition)
+    public function __construct($definition = null)
     {
 
         $this->definition = $definition;
@@ -60,11 +60,11 @@ class App implements DelegateInterface
     /**
      * Ajoute un middleware
      *
-     * @param string $routePrefix
-     * @param string|null $middleware
+     * @param string|callable|MiddlewareInterface $routePrefix
+     * @param string|callable|MiddlewareInterface $middleware
      * @return self
      */
-    public function pipe(string $routePrefix, ?string $middleware = null): self
+    public function pipe($routePrefix, $middleware = null): self
     {
         if ($middleware === null) {
             $this->middlewares[] = $routePrefix;
@@ -106,7 +106,9 @@ class App implements DelegateInterface
                 $builder->enableCompilation('tmp/di');
                 $builder->writeProxiesToFile(true, 'tmp/proxies');
             }
-            $builder->addDefinitions($this->definition);
+            if ($this->definition) {
+                $builder->addDefinitions($this->definition);
+            }
             foreach ($this->modules as $module) {
                 if ($module::DEFINITIONS) {
                     $builder->addDefinitions($module::DEFINITIONS);

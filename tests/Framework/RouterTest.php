@@ -34,7 +34,7 @@ class RouterTest extends TestCase
         // Teste que l'on récupère bien le nom de la route
         $this->assertEquals('blog', $route->getName());
 
-        // Teste que l'on récupère le bon résultat de la fonction callable 
+        // Teste que l'on récupère le bon résultat de la fonction callable
         $this->assertEquals('hello', call_user_func_array($route->getCallback(), [$request]));
     }
 
@@ -76,7 +76,7 @@ class RouterTest extends TestCase
         // Teste que l'on récupère bien le nom de la route
         $this->assertEquals('post.show', $route->getName());
 
-        // Teste que l'on récupère le bon résultat de la fonction callable 
+        // Teste que l'on récupère le bon résultat de la fonction callable
         $this->assertEquals('hello', call_user_func_array($route->getCallback(), [$request]));
 
         // Teste que l'on récupère les paramètres de l'url

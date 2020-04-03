@@ -10,6 +10,7 @@ use Framework\Session\FlashService;
 use Psr\Http\Message\ResponseInterface;
 use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use stdClass;
 
 class CrudAction
 {
@@ -72,6 +73,8 @@ class CrudAction
         'create' => "L'élément à bien été crée",
         'edit' => "L'élément à bien été modifié",
     ];
+
+    protected $acceptedParams = [];
 
     use RouterAwareAction;
 
@@ -196,7 +199,7 @@ class CrudAction
     {
 
         return array_filter($request->getParsedBody(), function ($key) {
-            return in_array($key, []);
+            return in_array($key, $this->acceptedParams);
         }, ARRAY_FILTER_USE_KEY);
     }
 
@@ -215,11 +218,11 @@ class CrudAction
     /**
      * Génère une nouvelle entité pour l'action de création
      *
-     * @return array
+     * @return stdClass
      */
     protected function getNewEntity()
     {
-        return [];
+        return new stdClass;
     }
 
     /**
