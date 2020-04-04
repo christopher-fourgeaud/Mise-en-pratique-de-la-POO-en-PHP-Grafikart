@@ -8,6 +8,7 @@ use App\Admin\AdminModule;
 use function Http\Response\send;
 
 use App\Auth\ForbiddenMiddleware;
+use App\Contact\ContactModule;
 use GuzzleHttp\Psr7\ServerRequest;
 use Framework\Middleware\CsrfMiddleware;
 use Framework\Middleware\MethodMiddleware;
@@ -23,6 +24,7 @@ require 'vendor/autoload.php';
 
 $app = (new App('config/config.php'))
     ->addModule(AdminModule::class)
+    ->addModule(ContactModule::class)
     ->addModule(BlogModule::class)
     ->addModule(AuthModule::class);
 $container = $app->getContainer();

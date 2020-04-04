@@ -16,6 +16,8 @@ use Framework\Renderer\RendererInterface;
 use Framework\Router\RouterTwigExtension;
 
 use Framework\Renderer\TwigRendererFactory;
+use Framework\SwiftMailerFactory;
+
 use function DI\{autowire, factory, get, env};
 
 return [
@@ -52,6 +54,11 @@ return [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             ]
         );
-    }
+    },
+
+    // Mailer
+    'mail.to' => 'admin@admin.fr',
+    Swift_Mailer::class => factory(SwiftMailerFactory::class)
+
 
 ];

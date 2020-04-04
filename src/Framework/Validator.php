@@ -191,6 +191,21 @@ class Validator
     }
 
     /**
+     * Vérifie si l'email est valide
+     *
+     * @param string $key
+     * @return self
+     */
+    public function checkEmail(string $key): self
+    {
+        $value = $this->getValue($key);
+        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+            $this->addError($key, 'email');
+        }
+        return $this;
+    }
+
+    /**
      * Vérifie le format d'un fichier
      *
      * @param string $key

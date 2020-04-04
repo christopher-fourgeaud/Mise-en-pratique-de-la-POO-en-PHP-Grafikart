@@ -189,4 +189,10 @@ class ValidatorTest extends DatabaseTestCase
         $this->assertTrue($this->makeValidator(['name' => 'a1'])->checkUnique('name', 'test', $pdo, 1)->isValid());
         $this->assertFalse($this->makeValidator(['name' => 'a2'])->checkUnique('name', 'test', $pdo, 1)->isValid());
     }
+
+    public function testCheckEmail()
+    {
+        $this->assertFalse($this->makeValidator(['email' => 'zaeazeaz'])->checkEmail('email')->isValid());
+        $this->assertTrue($this->makeValidator(['email' => 'demo@local.dev'])->checkEmail('email')->isValid());
+    }
 }
