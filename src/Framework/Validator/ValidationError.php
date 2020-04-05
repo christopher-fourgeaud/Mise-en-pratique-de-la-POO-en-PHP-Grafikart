@@ -22,7 +22,8 @@ class ValidationError
         'unique' => 'Le champs %s doit être unique !',
         'filetype' => 'Le champs %s n\'est pas au format valide ! (Formats valide : %s)',
         'uploaded' => 'Vous devez uploader un fichier !',
-        'email' => 'Cet email ne semble pas valide !'
+        'email' => 'Cet email ne semble pas valide !',
+        'confirm' => 'Vous n\'avez pas confirmé le champs %s !'
     ];
 
     public function __construct(string $key, string $rule, array $attributes = [])

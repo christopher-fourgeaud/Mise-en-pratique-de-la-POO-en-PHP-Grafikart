@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Framework;
+namespace Tests\Framework\Validator;
 
 use Framework\Validator;
 use Tests\DatabaseTestCase;
@@ -194,5 +194,20 @@ class ValidatorTest extends DatabaseTestCase
     {
         $this->assertFalse($this->makeValidator(['email' => 'zaeazeaz'])->checkEmail('email')->isValid());
         $this->assertTrue($this->makeValidator(['email' => 'demo@local.dev'])->checkEmail('email')->isValid());
+    }
+
+    public function testconfirm()
+    {
+        $this->assertFalse($this->makeValidator(['slug' => 'aze'])
+            ->confirm('slug')
+            ->isValid());
+
+        $this->assertFalse($this->makeValidator(['slug' => 'aze', 'slug_confirm' => 'azeaze'])
+            ->confirm('slug')
+            ->isValid());
+
+        $this->assertTrue($this->makeValidator(['slug' => 'aze', 'slug_confirm' => 'aze'])
+            ->confirm('slug')
+            ->isValid());
     }
 }

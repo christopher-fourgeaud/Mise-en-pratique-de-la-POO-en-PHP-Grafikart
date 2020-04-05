@@ -30,6 +30,9 @@
                     </form>
                 {% else %}
                     <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('account.signup') }}">S'inscrire</a>
+                    </li>
+                    <li class="nav-item active">
                         <a class="nav-link" href="{{ path('auth.login') }}">Se connecter</a>
                     </li>
                 {% endif %}

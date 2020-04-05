@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16e0e427ecb1222ab5e35cf4133e3010",
+    "content-hash": "28c57cae1fb581560f67b297a432a382",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -2172,6 +2172,47 @@
                 "utility"
             ],
             "time": "2020-02-18T01:57:35+00:00"
+        },
+        {
+            "name": "dms/phpunit-arraysubset-asserts",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rdohms/phpunit-arraysubset-asserts.git",
+                "reference": "d33fd352dbe1ca1c7dfe2b9f516ab9a852e3e516"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rdohms/phpunit-arraysubset-asserts/zipball/d33fd352dbe1ca1c7dfe2b9f516ab9a852e3e516",
+                "reference": "d33fd352dbe1ca1c7dfe2b9f516ab9a852e3e516",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3",
+                "phpunit/phpunit": "^9.0"
+            },
+            "require-dev": {
+                "dms/coding-standard": "^1.0",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DMS\\PHPUnitExtensions\\ArraySubset\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rafael Dohms",
+                    "email": "rdohms@gmail.com"
+                }
+            ],
+            "description": "This package provides ArraySubset and related asserts once deprecated in PHPUnit 8",
+            "time": "2020-02-12T15:25:06+00:00"
         },
         {
             "name": "doctrine/instantiator",

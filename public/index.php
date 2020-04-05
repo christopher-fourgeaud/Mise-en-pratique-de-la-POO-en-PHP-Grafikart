@@ -1,5 +1,6 @@
 <?php
 
+use App\Account\AccountModule;
 use Framework\App;
 use Middlewares\Whoops;
 use App\Auth\AuthModule;
@@ -26,7 +27,8 @@ $app = (new App('config/config.php'))
     ->addModule(AdminModule::class)
     ->addModule(ContactModule::class)
     ->addModule(BlogModule::class)
-    ->addModule(AuthModule::class);
+    ->addModule(AuthModule::class)
+    ->addModule(AccountModule::class);
 $container = $app->getContainer();
 $app->pipe(Whoops::class)
     ->pipe(TrailingSlashMiddleware::class)

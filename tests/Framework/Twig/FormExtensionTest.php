@@ -37,7 +37,7 @@ class FormExtensionTest extends TestCase
         $this->assertSimilar(
             "<div class=\"form-group\">
                 <label for=\"name\">Titre</label>
-                <input type=\"text\" class=\"form-control\" name=\"name\" id=\"name\" value=\"demo\">
+                <input class=\"form-control\" name=\"name\" id=\"name\" type=\"text\" value=\"demo\">
             </div>",
             $html
         );
@@ -55,7 +55,7 @@ class FormExtensionTest extends TestCase
         $this->assertSimilar(
             "<div class=\"form-group\">
                 <label for=\"name\">Titre</label>
-                <input type=\"text\" class=\"form-control demo\" name=\"name\" id=\"name\" value=\"demo\">
+                <input class=\"form-control demo\" name=\"name\" id=\"name\" type=\"text\" value=\"demo\">
             </div>",
             $html
         );
@@ -88,7 +88,7 @@ class FormExtensionTest extends TestCase
         $this->assertSimilar(
             "<div class=\"form-group has-danger\">
                 <label for=\"name\">Titre</label>
-                <input type=\"text\" class=\"form-control form-control-danger\" name=\"name\" id=\"name\" value=\"demo\">
+                <input class=\"form-control form-control-danger\" name=\"name\" id=\"name\" type=\"text\" value=\"demo\">
                 <small class=\"form-text text-muted\">erreur</small>
             </div>",
             $html
