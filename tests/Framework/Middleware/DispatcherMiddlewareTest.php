@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Framework\Middleware;
 
 use Framework\Middleware\DispatcherMiddleware;
@@ -21,9 +22,8 @@ class DispatcherMiddlewareTest extends TestCase
         $request = (new ServerRequest('GET', '/demo'))->withAttribute(Route::class, $route);
         $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
         $dispatcher = new DispatcherMiddleware($container);
-        $response = call_user_func_array($dispatcher, [$request, function () {
-        }]);
-        $this->assertEquals('Hello', (string)$response->getBody());
+        $response = $dispatcher->process($request, $this->getMockBuilder(DelegateInterface::class)->getMock());
+        $this->assertEquals('Hello', (string) $response->getBody());
     }
 
     public function testCallNextIfNotRoutes()
@@ -36,6 +36,6 @@ class DispatcherMiddlewareTest extends TestCase
 
         $request = (new ServerRequest('GET', '/demo'));
         $dispatcher = new DispatcherMiddleware($container);
-        $this->assertEquals($response, call_user_func_array($dispatcher, [$request, [$delegate, 'process']]));
+        $this->assertEquals($response, $dispatcher->process($request, $delegate));
     }
 }
