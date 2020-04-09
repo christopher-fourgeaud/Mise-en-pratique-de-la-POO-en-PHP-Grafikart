@@ -1,15 +1,18 @@
 <?php
 
-use App\Account\AccountModule;
 use Framework\App;
+use Framework\Auth;
 use Middlewares\Whoops;
 use App\Auth\AuthModule;
 use App\blog\BlogModule;
 use App\Admin\AdminModule;
-use function Http\Response\send;
+use App\Account\AccountModule;
 
-use App\Auth\ForbiddenMiddleware;
 use App\Contact\ContactModule;
+use function Http\Response\send;
+use App\Auth\ForbiddenMiddleware;
+use Framework\Auth\RoleMiddleware;
+use Framework\Auth\RoleMiddlewareFactory;
 use GuzzleHttp\Psr7\ServerRequest;
 use Framework\Middleware\CsrfMiddleware;
 use Framework\Middleware\MethodMiddleware;
@@ -33,7 +36,10 @@ $container = $app->getContainer();
 $app->pipe(Whoops::class)
     ->pipe(TrailingSlashMiddleware::class)
     ->pipe(ForbiddenMiddleware::class)
-    ->pipe($container->get('admin.prefix'), LoggedInMiddleware::class)
+    ->pipe(
+        $container->get('admin.prefix'),
+        $container->get(RoleMiddlewareFactory::class)->makeForRole('admin')
+    )
     ->pipe(MethodMiddleware::class)
     ->pipe(CsrfMiddleware::class)
     ->pipe(RouterMiddleware::class)
