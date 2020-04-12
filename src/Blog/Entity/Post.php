@@ -21,27 +21,21 @@ class Post
     public $image;
 
 
-    /**
-     * Set the value of createdAt
-     *
-     * @return  self
-     */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt($datetime)
     {
-        if (is_string($createdAt)) {
-            $this->createdAt = new \DateTime($createdAt);
+        if (is_string($datetime)) {
+            $this->createdAt = new \DateTime($datetime);
+        } else {
+            $this->createdAt = $datetime;
         }
     }
 
-    /**
-     * Set the value of updatedAt
-     *
-     * @return  self
-     */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt($datetime)
     {
-        if (is_string($updatedAt)) {
-            $this->updatedAt = new \DateTime($updatedAt);
+        if (is_string($datetime)) {
+            $this->updatedAt = new \DateTime($datetime);
+        } else {
+            $this->updatedAt = $datetime;
         }
     }
 

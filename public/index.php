@@ -20,6 +20,7 @@ use Framework\Middleware\RouterMiddleware;
 use Framework\Middleware\LoggedInMiddleware;
 use Framework\Middleware\NotFoundMiddleware;
 use Framework\Middleware\DispatcherMiddleware;
+use Framework\Middleware\RendererRequestMiddleware;
 use Framework\Middleware\TrailingSlashMiddleware;
 
 chdir(dirname(__DIR__));
@@ -41,6 +42,7 @@ $app->pipe(Whoops::class)
         $container->get(RoleMiddlewareFactory::class)->makeForRole('admin')
     )
     ->pipe(MethodMiddleware::class)
+    ->pipe(RendererRequestMiddleware::class)
     ->pipe(CsrfMiddleware::class)
     ->pipe(RouterMiddleware::class)
     ->pipe(DispatcherMiddleware::class)

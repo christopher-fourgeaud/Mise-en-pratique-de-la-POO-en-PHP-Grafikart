@@ -58,6 +58,8 @@ return [
 
     // Mailer
     'mail.to' => 'admin@admin.fr',
+    'mail.from' => 'no-reply@admin.fr',
+
     Swift_Mailer::class => factory(SwiftMailerFactory::class)
 
 

@@ -8,7 +8,9 @@ use App\Auth\Actions\LoginAction;
 use App\Auth\Actions\LogoutAction;
 use Psr\Container\ContainerInterface;
 use App\Auth\Actions\LoginAttemptAction;
+use App\Auth\Actions\PasswordResetAction;
 use Framework\Renderer\RendererInterface;
+use App\Auth\Actions\PasswordForgetAction;
 
 class AuthModule extends Module
 {
@@ -24,5 +26,7 @@ class AuthModule extends Module
         $router->get($container->get('auth.login'), LoginAction::class, 'auth.login');
         $router->post($container->get('auth.login'), LoginAttemptAction::class);
         $router->post('/logout', LogoutAction::class, 'auth.logout');
+        $router->any('/password', PasswordForgetAction::class, 'auth.password');
+        $router->any('/password/reset/{id:\d+}/{token}', PasswordResetAction::class, 'auth.reset');
     }
 }
